@@ -6,7 +6,8 @@ try:
         n = 0
         for line in source_file:
             n += 1
-            data = re.split(r'\s+', line.strip())
+            #data = re.split(r'\s+', line.strip())
+            data = line.strip().split()
             try:
                 count = int(data[1])
                 price = int(data[2])
