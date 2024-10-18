@@ -33,5 +33,30 @@ class StoreService():
         self.__orders.append(order)
         return Order()
 
+    # список из словарей (продукт, остаток на складе, сколько заказали)
+    def get_list_products(self) -> list[tuple[Product, int, int]]:
+        result = []
+
+        products_ordered_count = {}
+        for order in self.__orders:
+            for product in order.products:
+                if product not in products_ordered_count:
+                    products_ordered_count[product] = order.products[product]
+                else:
+                    products_ordered_count[product] += order.products[product]
+
+        for product in self.__products:
+            ordered_count = products_ordered_count[product] if product in products_ordered_count else 0
+            result.append((product, product.stock, ordered_count))
+
+        return result
+
+    # todo: плохая практика, печатать надо в контроллере
+    def list_products(self) -> None:
+        products = self.get_list_products()
+        for (product, stock, ordered_count) in products:
+            print(f"Товар {product.name} (id={product.id}), остаток на складе = {
+                  stock}, продано всего = {ordered_count}")
+
     def __repr__(self):
         return f"<StoreService>"
