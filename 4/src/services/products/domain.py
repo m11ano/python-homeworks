@@ -62,4 +62,9 @@ class Product():
             error_text = "stock value should be positive"
             logger.error(f"{self}, {error_text}")
             raise ProductError(error_text)
+        diff = stock - self.__stock
         self.__stock = stock
+        if diff < 0:
+            logger.log(f"{self} updated stock, decreased by {abs(diff)}")
+        else:
+            logger.log(f"{self} updated stock, increased by {diff}")

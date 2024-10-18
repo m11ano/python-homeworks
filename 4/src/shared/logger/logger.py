@@ -8,8 +8,8 @@ class Logger(metaclass=Singleton):
 
     def log(self, str: str) -> None:
         if self.__print:
-            print(f"Log: {str}")
+            print(f"\033[92mLog:\033[00m {str}")
 
     def error(self, str: str) -> None:
         if self.__print:
-            print(f"Error log: {str}")
+            print(f"\033[91mError log: {str}\033[00m")

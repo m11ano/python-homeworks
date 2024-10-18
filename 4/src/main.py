@@ -5,10 +5,9 @@ from services.store.service import StoreService
 from services.products.domain import Product
 
 logger = Logger()
-logger.log('app starting...')
 
 
-def main():
+def init_store() -> None:
     store = StoreService()
 
     product_bread = Product('Хлеб', 100, 10)
@@ -26,13 +25,30 @@ def main():
     order = store.create_order()
     order.add_product(product_bread, 3)
     order.add_product(product_sausage, 4)
+    order.add_product(product_cheese, 4)
+    order.add_product(product_oil, 2)
+
+    logger.log(order.calculate_total())
+
+    order.return_product(product_bread, 1)
+    order.return_product(product_oil)
+
+    logger.log(order.calculate_total())
+
+    order.clear()
 
     logger.log(order.calculate_total())
 
 
-try:
-    main()
-    logger.log('all works fine...')
+def main() -> None:
+    try:
+        logger.log('app starting...')
+        init_store()
+        logger.log('all works fine...')
 
-except Exception as err:
-    logger.error(f"app not started, something's wrong happend: {err}")
+    except Exception as err:
+        logger.error(f"app not started, something's wrong happend: {err}")
+
+
+if __name__ == '__main__':
+    main()

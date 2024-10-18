@@ -25,23 +25,24 @@ class Order():
         return self.__products
 
     def add_product(self, product: Product, quantity: int) -> None:
-        if quantity < 0:
-            error_text = "quantity should positive"
+        if quantity <= 0:
+            error_text = "quantity should more then zero"
             logger.error(f"{self} - {product} {error_text}")
             raise OrderError(error_text)
 
+        if product.stock < quantity:
+            error_text = f"cannot add {quantity} items, thats more then stock"
+            logger.error(f"{self} - {product} {error_text}")
+            raise OrderError(error_text)
+
+        # Tx start
         if product in self.__products:
-            if self.__products[product] + quantity > product.stock:
-                error_text = "cannot add more items than are in stock"
-                logger.error(f"{self} - {product} {error_text}")
-                raise OrderError(error_text)
             self.__products[product] += quantity
         else:
-            if quantity > product.stock:
-                error_text = "cannot add more items than are in stock"
-                logger.error(f"{self} - {product} {error_text}")
-                raise OrderError(error_text)
             self.__products[product] = quantity
+
+        product.update_stock(product.stock - quantity)
+        # Tx end
 
         logger.log(f"{self} - {product} added to order")
 
@@ -51,6 +52,31 @@ class Order():
             total += product.price * self.__products[product]
 
         return total
+
+    def return_product(self, product: Product, quantity: int | None = None) -> None:
+        if product not in self.__products:
+            error_text = f"cant return product, dont exists in order"
+            logger.error(f"{self} - {product} {error_text}")
+            raise OrderError(error_text)
+
+        if quantity is None:
+            quantity = self.__products[product]
+
+        # Tx start
+        product.update_stock(product.stock + quantity)
+        del self.__products[product]
+        # Tx end
+
+        logger.log(f"{self} - {product} returned to store")
+
+    def clear(self) -> None:
+        # Tx start
+        for product in self.__products:
+            product.update_stock(product.stock + self.__products[product])
+        self.__products.clear()
+        # Tx end
+
+        logger.log(f"{self} products list cleared, all returned to store")
 
     def __repr__(self):
         return f"<Order(id={self.__id})>"

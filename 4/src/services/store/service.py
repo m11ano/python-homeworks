@@ -12,10 +12,11 @@ class StoreError(Exception):
 class StoreService():
 
     __products: list[Product] = []
+    __orders: list[Order] = []
 
     def add_product(self, product: Product) -> None:
-        if product.stock <= 0:
-            error_text = "stock should be more then 0"
+        if product.stock < 0:
+            error_text = "stock should be positive"
             logger.error(f"{self} - {product} {error_text}")
             raise StoreError(error_text)
 
@@ -28,6 +29,8 @@ class StoreService():
         logger.log(f"{self} - {product} added to store")
 
     def create_order(self) -> Order:
+        order = Order()
+        self.__orders.append(order)
         return Order()
 
     def __repr__(self):
