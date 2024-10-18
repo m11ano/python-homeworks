@@ -6,10 +6,10 @@ class Logger(metaclass=Singleton):
     def __init__(self, print: bool = True):
         self.__print = print
 
-    def log(self, str: str) -> None:
+    def log(self, str: str, *args) -> None:
         if self.__print:
-            print(f"\033[92mLog:\033[00m {str}")
+            print(f"\033[92mLog:\033[00m {str}", *args)
 
-    def error(self, str: str) -> None:
+    def error(self, str: str, *args) -> None:
         if self.__print:
-            print(f"\033[91mError log: {str}\033[00m")
+            print(f"\033[91mError log: {str}\033[00m", *args)
