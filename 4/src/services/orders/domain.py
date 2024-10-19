@@ -1,6 +1,6 @@
-from services.products.domain import Product
-from shared.logger.logger import Logger
 import uuid
+from src.services.products.domain import Product
+from src.shared.logger.logger import Logger
 
 logger = Logger()
 
@@ -9,12 +9,11 @@ class OrderError(Exception):
     pass
 
 
-class Order():
-
+class Order:
     __products: dict[Product, int] = {}
 
     def __init__(self):
-        self.__id = uuid.uuid4()
+        self.__id = str(uuid.uuid4())
 
     @property
     def id(self) -> str:
@@ -41,13 +40,13 @@ class Order():
         else:
             self.__products[product] = quantity
 
-        product.update_stock(product.stock - quantity)
+        product.update_stock(-quantity)
         # Tx end
 
         logger.log(f"{self} - {product} added to order")
 
     def calculate_total(self) -> float:
-        total = 0
+        total: float = 0
         for product in self.__products:
             total += product.price * self.__products[product]
 
@@ -55,7 +54,7 @@ class Order():
 
     def return_product(self, product: Product, quantity: int | None = None) -> None:
         if product not in self.__products:
-            error_text = f"cant return product, dont exists in order"
+            error_text = "cant return product, dont exists in order"
             logger.error(f"{self} - {product} {error_text}")
             raise OrderError(error_text)
 
@@ -63,8 +62,11 @@ class Order():
             quantity = self.__products[product]
 
         # Tx start
-        product.update_stock(product.stock + quantity)
-        del self.__products[product]
+        product.update_stock(quantity)
+        if quantity == self.__products[product]:
+            del self.__products[product]
+        else:
+            self.__products[product] -= quantity
         # Tx end
 
         logger.log(f"{self} - {product} returned to store")

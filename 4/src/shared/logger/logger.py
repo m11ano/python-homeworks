@@ -1,8 +1,7 @@
-from ..metaclasses.singleton import Singleton
+from src.shared.metaclasses.singleton import Singleton
 
 
 class Logger(metaclass=Singleton):
-
     def __init__(self, print: bool = True):
         self.__print = print
 

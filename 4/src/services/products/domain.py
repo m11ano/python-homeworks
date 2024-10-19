@@ -1,5 +1,5 @@
 import uuid
-from shared.logger.logger import Logger
+from src.shared.logger.logger import Logger
 
 
 logger = Logger()
@@ -9,12 +9,11 @@ class ProductError(Exception):
     pass
 
 
-class Product():
-
+class Product:
     def __init__(self, name: str, price: float, stock: int):
         errors = []
 
-        self.__id = uuid.uuid4()
+        self.__id = str(uuid.uuid4())
 
         if len(name) == 0:
             errors.append("name should not be empty")
@@ -57,14 +56,14 @@ class Product():
     def __hash__(self):
         return hash(self.__id)
 
-    def update_stock(self, stock: int) -> None:
-        if stock < 0:
-            error_text = "stock value should be positive"
+    def update_stock(self, delta: int) -> None:
+        if self.__stock + delta < 0:
+            error_text = f"total stock value should be positive, stock={self.__stock}, delta={delta}"
             logger.error(f"{self}, {error_text}")
             raise ProductError(error_text)
-        diff = stock - self.__stock
-        self.__stock = stock
-        if diff < 0:
-            logger.log(f"{self} updated stock, decreased by {abs(diff)}")
-        else:
-            logger.log(f"{self} updated stock, increased by {diff}")
+
+        old_stock = self.__stock
+        self.__stock += delta
+        logger.log(
+            f"{self} stock updated by delta={delta} (prev stock value={old_stock})"
+        )

@@ -1,6 +1,6 @@
-from services.products.domain import Product
-from services.orders.domain import Order
-from shared.logger.logger import Logger
+from src.services.products.domain import Product
+from src.services.orders.domain import Order
+from src.shared.logger.logger import Logger
 
 logger = Logger()
 
@@ -9,8 +9,7 @@ class StoreError(Exception):
     pass
 
 
-class StoreService():
-
+class StoreService:
     __products: list[Product] = []
     __orders: list[Order] = []
 
@@ -46,7 +45,11 @@ class StoreService():
                     products_ordered_count[product] += order.products[product]
 
         for product in self.__products:
-            ordered_count = products_ordered_count[product] if product in products_ordered_count else 0
+            ordered_count = (
+                products_ordered_count[product]
+                if product in products_ordered_count
+                else 0
+            )
             result.append((product, product.stock, ordered_count))
 
         return result
@@ -54,9 +57,9 @@ class StoreService():
     # todo: плохая практика, печатать надо в контроллере
     def list_products(self) -> None:
         products = self.get_list_products()
-        for (product, stock, ordered_count) in products:
+        for product, stock, ordered_count in products:
             print(f"Товар {product.name} (id={product.id}), остаток на складе = {
                   stock}, продано всего = {ordered_count}")
 
     def __repr__(self):
-        return f"<StoreService>"
+        return "<StoreService>"
