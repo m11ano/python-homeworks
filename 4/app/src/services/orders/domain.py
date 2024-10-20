@@ -10,10 +10,12 @@ class OrderError(Exception):
 
 
 class Order:
-    __products: dict[Product, int] = {}
+    __products: dict[Product, int]
 
     def __init__(self):
+        self.__products = {}
         self.__id = str(uuid.uuid4())
+        logger.log(f"{self} - created")
 
     @property
     def id(self) -> str:
@@ -74,7 +76,7 @@ class Order:
     def clear(self) -> None:
         # Tx start
         for product in self.__products:
-            product.update_stock(product.stock + self.__products[product])
+            product.update_stock(self.__products[product])
         self.__products.clear()
         # Tx end
 

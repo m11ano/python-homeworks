@@ -10,8 +10,13 @@ class StoreError(Exception):
 
 
 class StoreService:
-    __products: list[Product] = []
-    __orders: list[Order] = []
+    __products: list[Product]
+    __orders: list[Order]
+
+    def __init__(self):
+        self.__products = []
+        self.__orders = []
+        logger.log(f"{self} - created")
 
     def add_product(self, product: Product) -> None:
         if product.stock < 0:
@@ -30,7 +35,7 @@ class StoreService:
     def create_order(self) -> Order:
         order = Order()
         self.__orders.append(order)
-        return Order()
+        return order
 
     # список из словарей (продукт, остаток на складе, сколько заказали)
     def get_list_products(self) -> list[tuple[Product, int, int]]:
