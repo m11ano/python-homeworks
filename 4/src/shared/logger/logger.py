@@ -1,15 +1,14 @@
 from shared.metaclasses.singleton import Singleton
-from typing import Type, Any, Dict
 
 
 class Logger(metaclass=Singleton):
-    def __init__(self, print: bool = True):
-        self.__print = print
+    def __init__(self, mock: bool = False):
+        self.__mock = mock
 
     def log(self, str: str, *args) -> None:
-        if self.__print:
+        if not self.__mock:
             print(f"\033[92mLog:\033[00m {str}", *args)
 
     def error(self, str: str, *args) -> None:
-        if self.__print:
+        if not self.__mock:
             print(f"\033[91mError log: {str}\033[00m", *args)
