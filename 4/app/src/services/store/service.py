@@ -19,11 +19,6 @@ class StoreService:
         logger.log(f"{self} - created")
 
     def add_product(self, product: Product) -> None:
-        if product.stock < 0:
-            error_text = "stock should be positive"
-            logger.error(f"{self} - {product} {error_text}")
-            raise StoreError(error_text)
-
         if product in self.__products:
             error_text = "product already added to store"
             logger.error(f"{self} - {product} {error_text}")
