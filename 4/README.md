@@ -11,3 +11,9 @@ poetry install --no-root
 ```
 poetry run python app/main.py
 ```
+
+### run tests
+
+```
+poetry run pytest
+```
