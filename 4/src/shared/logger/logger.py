@@ -1,4 +1,5 @@
-from src.shared.metaclasses.singleton import Singleton
+from shared.metaclasses.singleton import Singleton
+from typing import Type, Any, Dict
 
 
 class Logger(metaclass=Singleton):

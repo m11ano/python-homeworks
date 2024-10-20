@@ -1,5 +1,5 @@
 import uuid
-from src.shared.logger.logger import Logger
+from shared.logger.logger import Logger
 
 
 logger = Logger()
