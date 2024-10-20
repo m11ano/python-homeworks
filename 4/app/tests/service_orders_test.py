@@ -26,6 +26,11 @@ def test_add_product_to_order():
     assert order.products[product] == 2
     assert product.stock == 3
 
+    order.add_product(product, 1)
+
+    assert order.products[product] == 3
+    assert product.stock == 2
+
 
 def test_add_product_quantity_error():
     # Проверим выброс исключения при добавлении продукта с количеством <= 0
@@ -64,14 +69,19 @@ def test_calculate_total():
 
 def test_return_product():
     # Проверим корректный возврат продукта из заказа
-    product = Product("Test Product", 10.0, 5)
+    product = Product("Test Product", 10.0, 10)
     order = Order()
 
-    order.add_product(product, 2)
+    order.add_product(product, 5)
     order.return_product(product, 1)
 
-    assert order.products[product] == 1
-    assert product.stock == 4
+    assert order.products[product] == 4
+    assert product.stock == 6
+
+    order.return_product(product)
+
+    assert product not in order.products
+    assert product.stock == 10
 
 
 def test_return_nonexistent_product_error():

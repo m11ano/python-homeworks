@@ -15,5 +15,11 @@ poetry run python app/main.py
 ### run tests
 
 ```
-poetry run pytest
+poetry run coverage run -m pytest --verbose app/tests
+```
+
+### run tests coverage
+
+```
+poetry run coverage report -m
 ```

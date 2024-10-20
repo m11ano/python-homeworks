@@ -58,15 +58,18 @@ def test_get_list_products_with_orders():
     store.add_product(product2)
 
     # Создаем заказ и добавляем продукт
-    order = store.create_order()
-    order.add_product(product1, 3)
+    order1 = store.create_order()
+    order1.add_product(product1, 1)
+
+    order2 = store.create_order()
+    order2.add_product(product1, 1)
 
     products_list = store.get_list_products()
 
     assert len(products_list) == 2
     assert products_list[0][0] == product1
-    assert products_list[0][1] == 2  # Остаток на складе
-    assert products_list[0][2] == 3  # Заказано 3
+    assert products_list[0][1] == 3  # Остаток на складе
+    assert products_list[0][2] == 2  # Заказано 3
     assert products_list[1][0] == product2
     assert products_list[1][1] == 10  # Остаток не изменился, т.к. продукт не заказывали
     assert products_list[1][2] == 0  # Заказов нет
