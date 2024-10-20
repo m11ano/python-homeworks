@@ -1,6 +1,6 @@
 import uuid
-from services.products.domain import Product
-from shared.logger.logger import Logger
+from src.services.products.domain import Product
+from src.shared.logger.logger import Logger
 
 logger = Logger()
 

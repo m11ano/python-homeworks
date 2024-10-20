@@ -1,4 +1,4 @@
-from shared.metaclasses.singleton import Singleton
+from src.shared.metaclasses.singleton import Singleton
 
 
 class Logger(metaclass=Singleton):

@@ -1,6 +1,6 @@
-from services.products.domain import Product
-from services.orders.domain import Order
-from shared.logger.logger import Logger
+from src.services.products.domain import Product
+from src.services.orders.domain import Order
+from src.shared.logger.logger import Logger
 
 logger = Logger()
 

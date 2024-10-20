@@ -9,5 +9,5 @@ poetry install --no-root
 ### run app
 
 ```
-poetry run python src/main.py
+poetry run python app/main.py
 ```

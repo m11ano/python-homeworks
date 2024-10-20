@@ -1,9 +1,9 @@
 # Точка входа в приложение
 
 import traceback
-from shared.logger.logger import Logger
-from services.store.service import StoreService
-from services.products.domain import Product
+from src.shared.logger.logger import Logger
+from src.services.store.service import StoreService
+from src.services.products.domain import Product
 
 logger = Logger()
 
