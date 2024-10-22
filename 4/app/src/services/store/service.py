@@ -5,7 +5,7 @@ from src.shared.logger.logger import Logger
 logger = Logger()
 
 
-class StoreError(Exception):
+class StoreAddProductError(Exception):
     pass
 
 
@@ -22,7 +22,7 @@ class StoreService:
         if product in self.__products:
             error_text = "product already added to store"
             logger.error(f"{self} - {product} {error_text}")
-            raise StoreError(error_text)
+            raise StoreAddProductError(error_text)
 
         self.__products.append(product)
         logger.log(f"{self} - {product} added to store")

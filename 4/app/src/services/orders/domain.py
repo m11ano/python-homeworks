@@ -5,7 +5,7 @@ from src.shared.logger.logger import Logger
 logger = Logger()
 
 
-class OrderError(Exception):
+class OrderReturnProductError(Exception):
     pass
 
 
@@ -29,12 +29,12 @@ class Order:
         if quantity <= 0:
             error_text = "quantity should more then zero"
             logger.error(f"{self} - {product} {error_text}")
-            raise OrderError(error_text)
+            raise ValueError(error_text)
 
         if product.stock < quantity:
             error_text = f"cannot add {quantity} items, thats more then stock"
             logger.error(f"{self} - {product} {error_text}")
-            raise OrderError(error_text)
+            raise ValueError(error_text)
 
         # Tx start
         if product in self.__products:
@@ -58,10 +58,15 @@ class Order:
         if product not in self.__products:
             error_text = "cant return product, dont exists in order"
             logger.error(f"{self} - {product} {error_text}")
-            raise OrderError(error_text)
+            raise OrderReturnProductError(error_text)
 
         if quantity is None:
             quantity = self.__products[product]
+
+        if quantity > self.__products[product]:
+            error_text = "cant return product, quantity too much"
+            logger.error(f"{self} - {product} {error_text}")
+            raise OrderReturnProductError(error_text)
 
         # Tx start
         product.update_stock(quantity)

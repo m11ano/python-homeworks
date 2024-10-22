@@ -5,7 +5,7 @@ from src.shared.logger.logger import Logger
 logger = Logger()
 
 
-class ProductError(Exception):
+class ProductUpdateStockError(Exception):
     pass
 
 
@@ -30,7 +30,7 @@ class Product:
         if len(errors) > 0:
             error_text = ", ".join(errors)
             logger.error(f"{self} {error_text}")
-            raise ProductError(error_text)
+            raise ValueError(error_text)
         else:
             logger.log(f"{self} created")
 
@@ -60,7 +60,7 @@ class Product:
         if self.__stock + delta < 0:
             error_text = f"total stock value should be positive, stock={self.__stock}, delta={delta}"
             logger.error(f"{self}, {error_text}")
-            raise ProductError(error_text)
+            raise ProductUpdateStockError(error_text)
 
         old_stock = self.__stock
         self.__stock += delta

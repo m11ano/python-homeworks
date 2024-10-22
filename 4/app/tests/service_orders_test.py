@@ -3,7 +3,7 @@ import pytest
 from src.shared.logger.logger import Logger
 
 from src.services.products.domain import Product
-from src.services.orders.domain import Order, OrderError
+from src.services.orders.domain import Order, OrderReturnProductError
 
 logger = Logger()
 logger.set_mock(True)
@@ -37,7 +37,7 @@ def test_add_product_quantity_error():
     product = Product("Test Product", 10.0, 5)
     order = Order()
 
-    with pytest.raises(OrderError):
+    with pytest.raises(ValueError):
         order.add_product(product, 0)
 
 
@@ -46,7 +46,7 @@ def test_add_product_stock_error():
     product = Product("Test Product", 10.0, 5)
     order = Order()
 
-    with pytest.raises(OrderError):
+    with pytest.raises(ValueError):
         order.add_product(product, 10)
 
 
@@ -83,13 +83,17 @@ def test_return_product():
     assert product not in order.products
     assert product.stock == 10
 
+    order.add_product(product, 5)
+    with pytest.raises(OrderReturnProductError):
+        order.return_product(product, 6)
+
 
 def test_return_nonexistent_product_error():
     # Проверим, что при попытке вернуть несуществующий продукт выбрасывается ошибка
     product = Product("Test Product", 10.0, 5)
     order = Order()
 
-    with pytest.raises(OrderError):
+    with pytest.raises(OrderReturnProductError):
         order.return_product(product)
 
 

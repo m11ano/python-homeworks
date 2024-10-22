@@ -4,7 +4,7 @@ from src.shared.logger.logger import Logger
 
 from src.services.products.domain import Product
 from src.services.orders.domain import Order
-from src.services.store.service import StoreService, StoreError
+from src.services.store.service import StoreService, StoreAddProductError
 
 logger = Logger()
 logger.set_mock(True)
@@ -36,7 +36,7 @@ def test_add_existing_product_error():
     store = StoreService()
 
     store.add_product(product)
-    with pytest.raises(StoreError):
+    with pytest.raises(StoreAddProductError):
         store.add_product(product)
 
 
