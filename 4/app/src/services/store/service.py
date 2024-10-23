@@ -5,7 +5,7 @@ from src.shared.logger.logger import Logger
 logger = Logger()
 
 
-class StoreAddProductError(BaseException):
+class StoreAddProductError(Exception):
     pass
 
 

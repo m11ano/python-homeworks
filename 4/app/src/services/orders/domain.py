@@ -5,7 +5,7 @@ from src.shared.logger.logger import Logger
 logger = Logger()
 
 
-class OrderReturnProductError(BaseException):
+class OrderReturnProductError(Exception):
     pass
 
 
