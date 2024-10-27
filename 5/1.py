@@ -40,7 +40,7 @@ def log_operation(log: str, err_log: str | None = None):
             try:
                 func(*args, **kwargs)
                 print("LOG:", log)
-            except BaseException as e:
+            except Exception as e:
                 if err_log is not None:
                     print("ERROR:", err_log)
                 raise e
@@ -50,7 +50,7 @@ def log_operation(log: str, err_log: str | None = None):
     return wd
 
 
-class BookNotAvailable(BaseException):
+class BookNotAvailable(Exception):
     pass
 
 
@@ -71,9 +71,9 @@ class Library(BaseModel):
             return None
         for book in self.books:
             if (
-                (title is None or (title is not None and title == book.title))
-                and (author is None or (author is not None and author == book.author))
-                and (year is None or (year is not None and year == book.year))
+                (title is None or title == book.title)
+                and (author is None or author == book.author)
+                and (year is None or year == book.year)
             ):
                 return book
         return None
