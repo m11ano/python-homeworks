@@ -1,6 +1,7 @@
 import asyncio
 import aiohttp
-from typing import TypeVar, Type, List
+from typing import TypeVar, Type
+
 from pydantic import BaseModel, TypeAdapter, ValidationError
 
 T = TypeVar("T")
@@ -21,6 +22,7 @@ async def get_json_by_url(url: str, result_type: Type[T]) -> T:
                     except Exception:
                         raise GetJsonByUrlError("BAD_RESPONSE", response)
 
+                    # print(data)
                     adapter = TypeAdapter(result_type)
                     return adapter.validate_python(data)
                 else:
@@ -31,20 +33,42 @@ async def get_json_by_url(url: str, result_type: Type[T]) -> T:
             raise
 
 
-class Post(BaseModel):
-    userId: int
-    id: int
-    title: str
-    body: str
+class ResponseDataLocation(BaseModel):
+    name: str
+    country: str
+
+
+class ResponseDataCurrent(BaseModel):
+    temp_c: float
+    wind_kph: float
+    cloud: int
+    pressure_mb: float
+    precip_mm: float
+
+
+class ResponseData(BaseModel):
+    location: ResponseDataLocation
+    current: ResponseDataCurrent
 
 
 async def main() -> None:
+    q = input("Введите название города:")
+    if len(q) == 0:
+        return
+
     try:
         data = await get_json_by_url(
-            "https://jsonplaceholder.typicode.com/posts", List[Post]
+            f"http://api.weatherapi.com/v1/current.json?key=ee8616928f4c4b8481394936240311&q={q.strip()}&aqi=no",
+            ResponseData,
         )
-        for item in data[0:5]:
-            print(item.model_dump_json())
+
+        print(f"Город: {data.location.country}, {data.location.name}")
+        print("Погода:")
+        print(f"\tТемпература: {data.current.temp_c}")
+        print(f"\tСкорость ветра: {data.current.wind_kph} км/ч")
+        print(f"\tОблачность: {data.current.cloud}%")
+        print(f"\tДавление: {data.current.pressure_mb} милибар")
+        print(f"\tОсадки: {data.current.precip_mm} мм")
 
     except GetJsonByUrlError as e:
         match e.args[0]:
