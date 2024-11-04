@@ -21,8 +21,6 @@ async def get_json_by_url(url: str, result_type: Type[T]) -> T:
                         data = await response.json()
                     except Exception:
                         raise GetJsonByUrlError("BAD_RESPONSE", response)
-
-                    # print(data)
                     adapter = TypeAdapter(result_type)
                     return adapter.validate_python(data)
                 else:
@@ -52,7 +50,7 @@ class ResponseData(BaseModel):
 
 
 async def main() -> None:
-    q = input("Введите название города:")
+    q = input("Введите название города: ")
     if len(q) == 0:
         return
 
